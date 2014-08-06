@@ -1,8 +1,4 @@
-Jenkins Docker Container
-=========================
+docker-images
+=============
 
-Usage: 
-```
-$ docker build -t jenkins .
-$ docker run -d -P jenkins
-```
+This repo contains build file for some useful docker images
