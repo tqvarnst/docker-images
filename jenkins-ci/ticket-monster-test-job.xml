@@ -54,10 +54,10 @@ CONTAINER_ID=$(curl -v -X POST -H &quot;Content-Type: application/json&quot; &qu
 HOSTNAME=$(curl -v -X GET &quot;$DOCKER_API/containers/$CONTAINER_ID/json&quot; | jq .Config.Hostname | tr -d &quot;\&quot;&quot;)
 
 # start the container
-curl -v -X POST &quot;$DOCKER_API/containers/$HOSTNAME/start&quot;
+curl -v -X POST -H &quot;Content-Type: application/json&quot; &quot;$DOCKER_API/containers/$HOSTNAME/start&quot; -d &quot;{\&quot;PublishAllPorts\&quot;:true}&quot;
 
-EAP_HTTP_PORT=$(curl -X GET &quot;$DOCKER_API/containers/647f98ce1ad2c9102a6c6b4b084098b5440bb620d5759d6a079d7b4e5aac20f2/json&quot; | jq &apos;.NetworkSettings.Ports.&quot;8080/tcp&quot;[0].HostPort&apos; | tr -d &quot;\&quot;&quot;)
-EAP_MGMT_PORT=$(curl -X GET &quot;$DOCKER_API/containers/647f98ce1ad2c9102a6c6b4b084098b5440bb620d5759d6a079d7b4e5aac20f2/json&quot; | jq &apos;.NetworkSettings.Ports.&quot;9990/tcp&quot;[0].HostPort&apos; | tr -d &quot;\&quot;&quot;)
+EAP_HTTP_PORT=$(curl -X GET &quot;$DOCKER_API/containers/$CONTAINER_ID/json&quot; | jq &apos;.NetworkSettings.Ports.&quot;8080/tcp&quot;[0].HostPort&apos; | tr -d &quot;\&quot;&quot;)
+EAP_MGMT_PORT=$(curl -X GET &quot;$DOCKER_API/containers/$CONTAINER_ID/json&quot; | jq &apos;.NetworkSettings.Ports.&quot;9990/tcp&quot;[0].HostPort&apos; | tr -d &quot;\&quot;&quot;)
 
 EAP_HTTP_URL=$(echo $DOCKER_API | sed &quot;s/:[0-9]\{1,\}/:$EAP_HTTP_PORT/g&quot;)
 EAP_MGMT_URL=$(echo $DOCKER_API | sed &quot;s/:[0-9]\{1,\}/:$EAP_MGMT_PORT/g&quot;)

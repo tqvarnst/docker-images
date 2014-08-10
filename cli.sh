@@ -44,16 +44,22 @@ function remove_image {
 
 function remove_container {
   CONTAINER_ID=$(docker ps -a | grep $1 | awk '{ print $1; }')
-  docker rm $CONTAINER_ID
+
+  if [ ! -z "$CONTAINER_ID" ]; then
+    docker rm -f $CONTAINER_ID
+  fi
 }
 
 function stop_container {
   CONTAINER_ID=$(docker ps -a | grep $1 | awk '{ print $1; }')
-  docker stop $CONTAINER_ID
+
+  if [ ! -z "$CONTAINER_ID" ]; then
+    docker stop $CONTAINER_ID
+  fi
 }
 
 case "$1" in
-remove-container)
+remove)
   case "$2" in
     eap-apps)
       echo "Removing EAP Container(s)"
@@ -131,7 +137,7 @@ start)
     if [ ! $( docker ps -a | grep jenkins-ci | wc -l ) -gt 0 ]; then
       # Create a new Jenkins CI Container
       docker run -p 8000:8080 -h jenkins-ci --name jenkins-ci --link nexus:nexus \
-      	-e "DOCKER_API=$(echo $DOCKER_HOST | sed 's/http/tcp/g')"  \
+      	-e "DOCKER_API=$(echo $DOCKER_HOST | sed 's/tcp/http/g')"  \
       	-d jenkins-ci
     else
       # Start the existing container
@@ -194,9 +200,9 @@ status)
     docker ps
     ;;
 help)
-    echo "usage: ${NAME} (remove|start|build|status)"
+    echo "usage: ${NAME} (remove-image|remote|start|stop|build|status)"
     ;;
 *)
-    echo "usage: ${NAME} (remove|start|build|status)"
+    echo "usage: ${NAME} (remove-image|remote|start|stop|build|status)"
     exit 1
 esac
