@@ -7,16 +7,21 @@
 FROM jenkins
 MAINTAINER Siamak Sadeghianfar <ssadeghi@redhat.com>
 
+# Install tar
+RUN yum -y install tar
+
 # Maven settings
 ADD settings.xml /var/lib/jenkins/maven-settings.xml
 
-# Dev job
+# Jenkins Jobs
 RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-dev
 ADD ticket-monster-dev-job.xml /var/lib/jenkins/jobs/ticket-monster-dev/config.xml
 
-# Test job
 RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-test
 ADD ticket-monster-test-job.xml /var/lib/jenkins/jobs/ticket-monster-test/config.xml
+
+RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-prod
+ADD ticket-monster-prod-job.xml /var/lib/jenkins/jobs/ticket-monster-prod/config.xml
 
 # Set the permissions
 RUN chown -R jenkins:jenkins /var/lib/jenkins
