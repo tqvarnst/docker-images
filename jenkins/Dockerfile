@@ -62,7 +62,7 @@ RUN yum -y install git
 ############################################
 # Configure Jenkins
 ############################################
-# JDK 
+# Jenkins settings 
 ADD config.xml /var/lib/jenkins/config.xml
 
 # Maven

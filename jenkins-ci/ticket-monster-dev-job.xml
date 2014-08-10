@@ -30,7 +30,7 @@
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-    <triggers>
+  <triggers>
     <hudson.triggers.SCMTrigger>
       <spec>H/15 * * * *</spec>
       <ignorePostCommitHooks>false</ignorePostCommitHooks>
@@ -65,6 +65,15 @@
       <uniqueVersion>true</uniqueVersion>
       <evenIfUnstable>false</evenIfUnstable>
     </hudson.maven.RedeployPublisher>
+    <hudson.tasks.BuildTrigger>
+      <childProjects>ticket-monster-test</childProjects>
+      <threshold>
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+        <completeBuild>true</completeBuild>
+      </threshold>
+    </hudson.tasks.BuildTrigger>
   </publishers>
   <buildWrappers/>
   <prebuilders/>

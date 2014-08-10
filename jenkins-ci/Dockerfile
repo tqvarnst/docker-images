@@ -13,6 +13,9 @@ RUN yum -y install tar
 # Maven settings
 ADD settings.xml /var/lib/jenkins/maven-settings.xml
 
+# Override Jenkins settings
+ADD config.xml /var/lib/jenkins/config.xml
+
 # Jenkins Plugins
 RUN wget -O /var/lib/jenkins/plugins/build-pipeline-plugin.hpi http://updates.jenkins-ci.org/download/plugins/build-pipeline-plugin/1.4.3/build-pipeline-plugin.hpi
 RUN wget -O /var/lib/jenkins/plugins/jquery.hpi http://updates.jenkins-ci.org/download/plugins/jquery/1.7.2-1/jquery.hpi
