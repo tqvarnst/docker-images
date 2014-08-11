@@ -1,4 +1,6 @@
-docker-images
+Continuous Delivery Docker Demo
 =============
 
-This repo contains build file for some useful docker images
+Usage:
+$ ./cli.sh build all
+$ ./cli.sh start

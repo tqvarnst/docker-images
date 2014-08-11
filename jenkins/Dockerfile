@@ -38,7 +38,6 @@ ENV JAVA_HOME /usr/lib/jvm/jre
 ############################################
 # Install Jenkins
 ############################################
-RUN yum -y install wget
 RUN wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
 RUN rpm --import http://pkg.jenkins-ci.org/redhat/jenkins-ci.org.key
 RUN yum -y install jenkins
@@ -63,7 +62,7 @@ RUN yum -y install git
 ############################################
 # Configure Jenkins
 ############################################
-# JDK 
+# Jenkins settings 
 ADD config.xml /var/lib/jenkins/config.xml
 
 # Maven
@@ -78,9 +77,19 @@ RUN wget -O /var/lib/jenkins/plugins/scm-api.hpi http://updates.jenkins-ci.org/d
 RUN chown -R jenkins:jenkins /var/lib/jenkins
 
 ############################################
+# Install Supervisor
+############################################
+
+RUN wget -O /tmp/epel-release-6-8.noarch.rpm http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm 
+RUN rpm -ivh /tmp/epel-release-6-8.noarch.rpm
+RUN yum -y install supervisor
+RUN echo "[program:jenkins]" >> /etc/supervisord.conf
+RUN echo "command=/etc/init.d/jenkins start" >> /etc/supervisord.conf
+
+############################################
 # Start Jenkins
 ############################################
 
-ENTRYPOINT ["/etc/alternatives/java", "-Dcom.sun.akuma.Daemon=daemonized", "-Djava.awt.headless=true", "-DJENKINS_HOME=/var/lib/jenkins", "-jar", "/usr/lib/jenkins/jenkins.war", "--logfile=/var/log/jenkins/jenkins.log", "--webroot=/var/cache/jenkins/war", "--daemon", "--httpPort=8080", "--ajp13Port=8009", "--debug=5", "--handlerCountMax=100", "--handlerCountMaxIdle=20", "--prefix=/jenkins"]
+CMD ["/usr/bin/supervisord", "-n"]
 
 EXPOSE 8080

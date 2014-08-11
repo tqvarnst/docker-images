@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command># wipe out workspace
+rm -rf ticket-monster.war
+rm -rf image
+
+# download deployment
+curl -o ./ticket-monster.war &quot;http://nexus:8081/nexus/service/local/artifact/maven/content?g=org.jboss.jdf.examples&amp;a=ticket-monster&amp;v=LATEST&amp;r=snapshots&amp;e=war&quot;
+
+# create docker image dir
+mkdir image
+cp ticket-monster.war image/
+
+# create Dockerfile
+cat &gt;image/Dockerfile &lt;&lt;EOF
+FROM eap
+ADD ticket-monster.war /home/jbosseap/eap/jboss-eap-6.3/standalone/deployments/ticket-monster.war
+EOF
+
+# pack docker image definition
+pushd ./image
+tar zcf dockerfile.tar.gz ticket-monster.war Dockerfile
+popd
+
+# build docker image
+curl -v -X POST -H &quot;Content-Type: application/tar&quot; --data-binary &apos;@image/dockerfile.tar.gz&apos; &quot;$DOCKER_API/build?t=eap-ticket-monster-test-$BUILD_NUMBER&quot;
+
+# create container
+CONTAINER_ID=$(curl -v -X POST -H &quot;Content-Type: application/json&quot; &quot;$DOCKER_API/containers/create?name=ticket-monster-test-$BUILD_NUMBER&quot; -d &quot;{\&quot;Image\&quot;:\&quot;eap-ticket-monster-test-$BUILD_NUMBER\&quot;}&quot; | jq .Id | tr -d &quot;\&quot;&quot;)
+HOSTNAME=$(curl -v -X GET &quot;$DOCKER_API/containers/$CONTAINER_ID/json&quot; | jq .Config.Hostname | tr -d &quot;\&quot;&quot;)
+
+# start the container
+curl -v -X POST -H &quot;Content-Type: application/json&quot; &quot;$DOCKER_API/containers/$HOSTNAME/start&quot; -d &quot;{\&quot;PublishAllPorts\&quot;:true}&quot;
+
+EAP_HTTP_PORT=$(curl -X GET &quot;$DOCKER_API/containers/$CONTAINER_ID/json&quot; | jq &apos;.NetworkSettings.Ports.&quot;8080/tcp&quot;[0].HostPort&apos; | tr -d &quot;\&quot;&quot;)
+EAP_MGMT_PORT=$(curl -X GET &quot;$DOCKER_API/containers/$CONTAINER_ID/json&quot; | jq &apos;.NetworkSettings.Ports.&quot;9990/tcp&quot;[0].HostPort&apos; | tr -d &quot;\&quot;&quot;)
+
+EAP_HTTP_URL=$(echo $DOCKER_API | sed &quot;s/:[0-9]\{1,\}/:$EAP_HTTP_PORT/g&quot;)
+EAP_MGMT_URL=$(echo $DOCKER_API | sed &quot;s/:[0-9]\{1,\}/:$EAP_MGMT_PORT/g&quot;)
+</command>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.BuildTrigger>
+      <childProjects>ticket-monster-prod</childProjects>
+      <threshold>
+        <name>SUCCESS</name>
+        <ordinal>0</ordinal>
+        <color>BLUE</color>
+        <completeBuild>true</completeBuild>
+      </threshold>
+    </hudson.tasks.BuildTrigger>
+  </publishers>
+  <buildWrappers/>
+</project>
