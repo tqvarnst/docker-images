@@ -1,3 +1,4 @@
+
 <?xml version='1.0' encoding='UTF-8'?>
 <project>
   <actions/>
@@ -14,29 +15,35 @@
   <builders>
     <hudson.tasks.Shell>
       <command># wipe out workspace
-rm -rf ticket-monster.war
-rm -rf image
+rm -rf *
 
 # download deployment
-curl -o ./ticket-monster.war &quot;http://nexus:8081/nexus/service/local/artifact/maven/content?g=org.jboss.jdf.examples&amp;a=ticket-monster&amp;v=LATEST&amp;r=snapshots&amp;e=war&quot;
+curl -o ticket-monster.war &quot;http://nexus:8081/nexus/service/local/artifact/maven/content?g=org.jboss.jdf.examples&amp;a=ticket-monster&amp;v=LATEST&amp;r=snapshots&amp;e=war&quot;
 
-# create docker image dir
-mkdir image
-cp ticket-monster.war image/
+# download puppet config
+curl -o appconfig.pp &quot;http://nexus:8081/nexus/service/local/artifact/maven/content?g=org.jboss.jdf.examples&amp;a=ticket-monster&amp;v=LATEST&amp;r=snapshots&amp;e=puppet&quot;
 
 # create Dockerfile
-cat &gt;image/Dockerfile &lt;&lt;EOF
+cat &gt;Dockerfile &lt;&lt;EOF
 FROM eap
+
+USER root
+RUN rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
+RUN yum -y install puppet
+
+USER jbosseap
 ADD ticket-monster.war /home/jbosseap/eap/jboss-eap-6.3/standalone/deployments/ticket-monster.war
+ADD appconfig.pp /tmp/appconfig.pp
+
+USER root
+RUN puppet apply /tmp/appconfig.pp
 EOF
 
 # pack docker image definition
-pushd ./image
-tar zcf dockerfile.tar.gz ticket-monster.war Dockerfile
-popd
+tar zcf dockerfile.tar.gz ticket-monster.war appconfig.pp Dockerfile
 
 # build docker image
-curl -v -X POST -H &quot;Content-Type: application/tar&quot; --data-binary &apos;@image/dockerfile.tar.gz&apos; &quot;$DOCKER_API/build?t=eap-ticket-monster-test-$BUILD_NUMBER&quot;
+curl -v -X POST -H &quot;Content-Type: application/tar&quot; --data-binary &apos;@dockerfile.tar.gz&apos; &quot;$DOCKER_API/build?t=eap-ticket-monster-test-$BUILD_NUMBER&quot;
 
 # create container
 CONTAINER_ID=$(curl -v -X POST -H &quot;Content-Type: application/json&quot; &quot;$DOCKER_API/containers/create?name=ticket-monster-test-$BUILD_NUMBER&quot; -d &quot;{\&quot;Image\&quot;:\&quot;eap-ticket-monster-test-$BUILD_NUMBER\&quot;}&quot; | jq .Id | tr -d &quot;\&quot;&quot;)
