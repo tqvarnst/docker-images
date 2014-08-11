@@ -36,5 +36,5 @@ RUN rm $HOME/tmp/*
 
 CMD $HOME/eap/jboss-eap-6.3/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0
 
-EXPOSE 8080 9990
+EXPOSE 8080 9990 9999
 

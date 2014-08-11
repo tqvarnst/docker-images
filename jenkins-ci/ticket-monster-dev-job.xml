@@ -1,3 +1,4 @@
+
 <?xml version='1.0' encoding='UTF-8'?>
 <maven2-moduleset plugin="maven-plugin@2.5">
   <actions/>
@@ -19,7 +20,7 @@
     </userRemoteConfigs>
     <branches>
       <hudson.plugins.git.BranchSpec>
-        <name>*/master</name>
+        <name>2.6.x-develop</name>
       </hudson.plugins.git.BranchSpec>
     </branches>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
@@ -32,15 +33,16 @@
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <triggers>
     <hudson.triggers.SCMTrigger>
-      <spec>H/15 * * * *</spec>
+      <spec>H/5 * * * *</spec>
       <ignorePostCommitHooks>false</ignorePostCommitHooks>
     </hudson.triggers.SCMTrigger>
   </triggers>
   <concurrentBuild>false</concurrentBuild>
   <rootModule>
-    <groupId>org.jboss.jdf.examples</groupId>
+    <groupId>org.jboss.examples</groupId>
     <artifactId>ticket-monster</artifactId>
   </rootModule>
+  <rootPOM>demo/pom.xml</rootPOM>
   <goals>clean package</goals>
   <aggregatorStyleBuild>true</aggregatorStyleBuild>
   <incrementalBuild>false</incrementalBuild>
