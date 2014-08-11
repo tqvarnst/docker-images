@@ -7,11 +7,10 @@
 # This script builds all required docker images.
 # 
 
-
-function build_image {
+function build_image { 
   IMAGE=$1
-  pushd ./${IMAGE} >/dev/null
-  docker build -q --rm -t ${IMAGE} .
+  pushd ../$IMAGE >/dev/null
+  docker build -q --rm -t $IMAGE .
   popd > /dev/null
 
 }
