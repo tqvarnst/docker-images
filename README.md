@@ -1,6 +1,3 @@
-Continuous Delivery Docker Demo
+Docker Images
 =============
 
-Usage:
-$ ./cli.sh build all
-$ ./cli.sh start
