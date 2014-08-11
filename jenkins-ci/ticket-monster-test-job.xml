@@ -18,10 +18,10 @@
 rm -rf *
 
 # download deployment
-curl -o ticket-monster.war &quot;http://nexus:8081/nexus/service/local/artifact/maven/content?g=org.jboss.jdf.examples&amp;a=ticket-monster&amp;v=LATEST&amp;r=snapshots&amp;e=war&quot;
+curl -o ticket-monster.war &quot;http://nexus:8081/nexus/service/local/artifact/maven/content?g=org.jboss.examples&amp;a=ticket-monster&amp;v=LATEST&amp;r=snapshots&amp;e=war&quot;
 
 # download puppet config
-curl -o appconfig.pp &quot;http://nexus:8081/nexus/service/local/artifact/maven/content?g=org.jboss.jdf.examples&amp;a=ticket-monster&amp;v=LATEST&amp;r=snapshots&amp;e=puppet&quot;
+curl -o appconfig.pp &quot;http://nexus:8081/nexus/service/local/artifact/maven/content?g=org.jboss.examples&amp;a=ticket-monster&amp;v=LATEST&amp;r=snapshots&amp;e=puppet&quot;
 
 # create Dockerfile
 cat &gt;Dockerfile &lt;&lt;EOF
