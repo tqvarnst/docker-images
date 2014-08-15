@@ -20,6 +20,8 @@ ADD config.xml /var/lib/jenkins/config.xml
 RUN wget -O /var/lib/jenkins/plugins/build-pipeline-plugin.hpi http://updates.jenkins-ci.org/download/plugins/build-pipeline-plugin/1.4.3/build-pipeline-plugin.hpi
 RUN wget -O /var/lib/jenkins/plugins/jquery.hpi http://updates.jenkins-ci.org/download/plugins/jquery/1.7.2-1/jquery.hpi
 RUN wget -O /var/lib/jenkins/plugins/parameterized-trigger.hpi http://updates.jenkins-ci.org/download/plugins/parameterized-trigger/2.25/parameterized-trigger.hpi
+RUN wget -O /var/lib/jenkins/plugins/sonar.hpi http://updates.jenkins-ci.org/download/plugins/sonar/2.1/sonar.hpi
+RUN wget -O /var/lib/jenkins/plugins/javadoc.hpi http://updates.jenkins-ci.org/download/plugins/javadoc/1.2/javadoc.hpi
 
 # Jenkins Jobs
 RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-dev
