@@ -67,4 +67,4 @@ RUN echo "priority=20" >> /etc/supervisord.conf
 
 CMD ["/usr/bin/supervisord", "-n"]
 
-EXPOSE 9000
+EXPOSE 9000 5432
