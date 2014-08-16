@@ -28,6 +28,7 @@ RUN yum -y localinstall http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-
 RUN yum -y install postgresql93-server postgresql93
 RUN /etc/init.d/postgresql-9.3 initdb
 RUN sed -i "s/peer/trust/g" /var/lib/pgsql/9.3/data/pg_hba.conf
+RUN sed -i "s/ident/md5/g" /var/lib/pgsql/9.3/data/pg_hba.conf
 RUN echo "listen_addresses='*'" >> /var/lib/pgsql/9.3/data/postgresql.conf
 RUN /etc/init.d/postgresql-9.3 start && \
 	psql -U postgres --command "CREATE USER sonar WITH SUPERUSER PASSWORD 'sonar';" && \
@@ -41,7 +42,7 @@ RUN wget -O /tmp/sonarqube-4.4.zip http://dist.sonar.codehaus.org/sonarqube-4.4.
 RUN unzip -d /opt /tmp/sonarqube-4.4.zip
 RUN mv /opt/sonarqube-4.4 /opt/sonarqube
 RUN sed -i \
-        -e "s#^sonar.jdbc.url.*#sonar.jdbc.url: jdbc:postgresql://localhost:5432/sonar#" \
+        -e "s#^sonar.jdbc.url.*#sonar.jdbc.url: jdbc:postgresql://127.0.0.1:5432/sonar#" \
         /opt/sonarqube/conf/sonar.properties
 
 ############################################
