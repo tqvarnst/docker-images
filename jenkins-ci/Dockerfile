@@ -23,12 +23,18 @@ RUN wget -O /var/lib/jenkins/plugins/parameterized-trigger.hpi http://updates.je
 RUN wget -O /var/lib/jenkins/plugins/sonar.hpi http://updates.jenkins-ci.org/download/plugins/sonar/2.1/sonar.hpi
 RUN wget -O /var/lib/jenkins/plugins/javadoc.hpi http://updates.jenkins-ci.org/download/plugins/javadoc/1.2/javadoc.hpi
 
+# Add SonarQube Config
+ADD sonar.xml /var/lib/jenkins/hudson.plugins.sonar.SonarPublisher.xml
+
 # Jenkins Jobs
 RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-dev
 ADD ticket-monster-dev-job.xml /var/lib/jenkins/jobs/ticket-monster-dev/config.xml
 
 RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-test
 ADD ticket-monster-test-job.xml /var/lib/jenkins/jobs/ticket-monster-test/config.xml
+
+RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-sonar
+ADD ticket-monster-sonar-job.xml /var/lib/jenkins/jobs/ticket-monster-sonar/config.xml
 
 # RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-prod
 # ADD ticket-monster-prod-job.xml /var/lib/jenkins/jobs/ticket-monster-prod/config.xml
