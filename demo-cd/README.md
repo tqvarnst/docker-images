@@ -1,7 +1,7 @@
 Continuous Delivery Using Docker Containers
 =============
 
-This script creates a docker-based continuous delivery environment by setting up Jenkins, Nexus and Sonar in separate docker containers. Jenkins is pre-configured to use Nexus as the maven repository and contains build jobs for the t[https://github.com/siamaksade/ticket-monster](https://github.com/siamaksade/ticket-monster) project. The build job builds new docker images containing JBoss EAP with TicketMonster deployed on it.  
+This script creates a docker-based continuous delivery environment by setting up Jenkins, Nexus and Sonar in separate docker containers. Jenkins is pre-configured to use Nexus as the maven repository and contains build jobs for the [ticket-monster](https://github.com/siamaksade/ticket-monster) project. The build job builds new docker images containing JBoss EAP with TicketMonster deployed on it.  
 
 ![Continuous Delivery with Docker](https://raw.githubusercontent.com/siamaksade/docker-images/master/demo-cd/images/cd-docker.png)
 
