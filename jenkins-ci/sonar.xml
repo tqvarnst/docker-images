@@ -5,12 +5,12 @@
     <hudson.plugins.sonar.SonarInstallation>
       <name>Sonar</name>
       <disabled>false</disabled>
-      <serverUrl>http://$SONAR_PORT_9000_TCP_ADDR:$SONAR_PORT_9000_TCP_PORT</serverUrl>
+      <serverUrl>http://sonar:9000</serverUrl>
       <mojoVersion></mojoVersion>
-      <databaseUrl>jdbc:postgresql://$SONAR_PORT_5432_TCP_ADDR:$SONAR_PORT_5432_TCP_PORT/sonar</databaseUrl>
+      <databaseUrl>jdbc:postgresql://sonar:5432/sonar</databaseUrl>
       <databaseDriver>org.postgresql.Driver</databaseDriver>
-      <databaseLogin>sonar</databaseLogin>
-      <databasePassword>sonar=</databasePassword>
+      <databaseLogin></databaseLogin>
+      <databasePassword></databasePassword>
       <additionalProperties></additionalProperties>
       <triggers>
         <skipScmCause>false</skipScmCause>

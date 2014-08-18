@@ -30,8 +30,8 @@ ADD sonar.xml /var/lib/jenkins/hudson.plugins.sonar.SonarPublisher.xml
 RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-dev
 ADD ticket-monster-dev-job.xml /var/lib/jenkins/jobs/ticket-monster-dev/config.xml
 
-RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-test
-ADD ticket-monster-test-job.xml /var/lib/jenkins/jobs/ticket-monster-test/config.xml
+RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-systest
+ADD ticket-monster-systest-job.xml /var/lib/jenkins/jobs/ticket-monster-systest/config.xml
 
 RUN mkdir -p /var/lib/jenkins/jobs/ticket-monster-sonar
 ADD ticket-monster-sonar-job.xml /var/lib/jenkins/jobs/ticket-monster-sonar/config.xml
