@@ -2,6 +2,7 @@ FROM    centos:centos6
 
 MAINTAINER psteiner <psteiner@redhat.com>
 MAINTAINER ssadeghi <ssadeghi@redhat.com>
+MAINTAINER Thomas Qvarnstrom <tqvarnst@redhat.com>
 
 # Update the system and Install necessary RPMs
 RUN yum -y update && \ 
