@@ -7,11 +7,6 @@ RUN mkdir /home/user/wildfly && \
 RUN cd /home/user/wildfly/standalone/configuration/ && \  
   	 sed -i 's/<location name="\/" handler="welcome-content"\/>//g' standalone.xml
 
-RUN mkdir ~/.m2 && \
-    wget \
-    -qO ~/.m2/settings.xml
-    "https://raw.githubusercontent.com/tqvarnst/docker-images/master/codenvy-wildfly/settings.xml"
-
 ADD $app$ /home/user/wildfly/standalone/deployments/ROOT.war
 
 
