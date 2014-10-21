@@ -1,12 +1,15 @@
+#######################################################################
+#                                                                     #
+# Creates a base CentOS image with JBoss EAP 6.3 					  #
+#                                                                     #
+#######################################################################
 FROM    centos:centos6
 
-MAINTAINER psteiner <psteiner@redhat.com>
 MAINTAINER ssadeghi <ssadeghi@redhat.com>
+MAINTAINER tqvarnst <tqvarnst@redhat.com>
 
 # Update the system and Install necessary RPMs
-RUN yum -y update && \ 
- yum -y install java-1.7.0-openjdk java-1.7.0-openjdk-devel unzip openssh-server openssh-clients  && \
- yum clean all
+RUN yum -y install java-1.7.0-openjdk-devel unzip
 
 # Make sure JAVA_HOME is set
 ENV JAVA_HOME /usr/lib/jvm/jre
@@ -17,7 +20,9 @@ RUN echo "root:redhat" | /usr/sbin/chpasswd
 # Create user to run JBoss EAP
 RUN useradd -m -d /home/jbosseap -p jbosseap jbosseap 
 
-# Install JBoss EAP 6.3.0
+#######################################################################                                                                     #
+# Install JBoss EAP													  #                                                                     #
+#######################################################################
 USER jbosseap
 
 ENV HOME /home/jbosseap
@@ -26,12 +31,15 @@ RUN mkdir $HOME/eap && \
    
 ADD . $HOME/tmp/
 
-RUN /usr/bin/unzip -q $HOME/tmp/jboss-eap-6.3.*.zip -d $HOME/eap 
+RUN /usr/bin/unzip -q $HOME/tmp/jboss-eap-6.3.*.zip -d $HOME/eap
 
-# Add admin user admin=admin-123
-RUN echo "admin=31d47addbf45f5c23eb6419f6d1176b8" >> $HOME/eap/jboss-eap-6.3/standalone/configuration/mgmt-users.properties
+ENV JBOSS_HOME $HOME/eap/jboss-eap-6.3
 
-#Clean Up
+RUN $JBOSS_HOME/bin/add-user.sh -g admin -u admin -p admin-123 -s
+
+#######################################################################                                                                     #
+# Clean up															  #                                                                     #
+#######################################################################
 RUN rm $HOME/tmp/*
 
 CMD $HOME/eap/jboss-eap-6.3/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0
