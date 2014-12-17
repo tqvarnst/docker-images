@@ -56,6 +56,7 @@ RUN echo "" >> $FUSE_HOME/etc/users.properties
 # 	Add a admin user
 RUN echo "admin=admin-123,admin" >> $FUSE_HOME/etc/users.properties
 
+
 #RUN $FUSE_HOME/bin/start
 
 #RUN $FUSE_HOME/bin/client -r 3 -d 20 -u admin -p admin-123 'fabric:create --wait-for-provisioning'
